@@ -8,7 +8,7 @@ Testing Project for our ConveyorBelt Project.
 You need Electron to start this app.
 Go to the src Folder and write
 
-electron .
+```electron .```
 
 * Technologies: Electron, Javascript, Websockets
 * Target Project: WildFly war
