@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>WebSocket Test</title>
+
+    <script type="text/javascript" src="resources/js/jquery-2.2.3.min.js"></script>
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="resources/css/foundation.css" />
+    <link rel="stylesheet" href="resources/css/style.css" />
+  </head>
+
+  <body>
+    <div class="header">
+        <h1>Websocket Tester</h1>
+      </br>
+    </div>
+
+    <div class="centerContainer">
+      <button class="button" onclick="connectAllWebsockets()">Connect all Websockets</button></br>
+      <button class="button" onclick="createNewWheel()">Create a new Wheel</button></br>
+      <button class="button" onclick="conv2Add20()">Add 20 to Conv2</button></br>
+      <button class="button" onclick="conv3Add20()">Add 20 to Conv3</button></br>
+      <button class="button" onclick="conv4Add20()">Add 20 to Conv4</button></br>
+      <button class="button" onclick="greenWheelAtSlide()">Green Wheel at Slide</button>
+      <button class="button" onclick="blueWheelAtSlide()">Blue Wheel at Slide</button></br>
+      <button class="button" onclick="slideFinished()">Slide finished</button></br>
+      <button class="button" onclick="slideReady()">Slide ready</button></br>
+    </div>
+  </body>
+
+  <script>
+  var url = "ws://localhost:8080/ConveyorBeltOstfalia/echo"
+
+  var allWebsockets = new Array();
+  var ws1;
+  allWebsockets[0] = ws1;
+  var ws2;
+  allWebsockets[1] = ws2;
+  var ws3;
+  allWebsockets[2] = ws3;
+  var ws4;
+  allWebsockets[3] = ws4;
+  var ws5;
+  allWebsockets[4] = ws5;
+  var ws6;
+  allWebsockets[5] = ws6;
+  var ws7;
+  allWebsockets[6] = ws7;
+  var ws8;
+  allWebsockets[7] = ws8;
+  var ws9;
+  allWebsockets[8] = ws9;
+  var ws10;
+  allWebsockets[9] = ws10;
+  var ws11;
+  allWebsockets[10] = ws11;
+  var ws12;
+  allWebsockets[11] = ws12;
+  var ws13;
+  allWebsockets[12] = ws13;
+  function connectAllWebsockets(){
+    for(var i = 0; i < allWebsockets.length; i++){
+      connect(i);
+    }
+  }
+  function connect(provideId) {
+    console.log("Connect ID:" + provideId + 1);
+    allWebsockets[provideId] = new WebSocket(url);
+    allWebsockets[provideId].onmessage = function(event) {
+      console.log(event.data);
+      var jsonObject = JSON.parse(event.data);
+      if (jsonObject.action === "requestId") {
+        // Send Callback for providing Ids.
+        sendMessage(allWebsockets[provideId],'{"action": "provideId", "id":' + (provideId + 1) + ',"title": "HTML Application"}');
+      } else if (jsonObject.action === "wheelStoreUpdate") {
+         // Implement Logic.
+      } else if (jsonObject.action === "wheelUpdate") {
+    	 // Implement Logic.
+      }
+    };
+  }
+  function sendMessage(ws,msg) {
+      waitForSocketConnection(ws, function() {
+          ws.send(msg);
+      });
+  };
+
+
+function waitForSocketConnection(socket, callback){
+      setTimeout(
+          function(){
+              if (socket.readyState === 1) {
+                  if(callback !== undefined){
+                      callback();
+                  }
+                  return;
+              } else {
+                  waitForSocketConnection(socket,callback);
+              }
+          }, 5);
+  };
+
+
+  function createNewWheel(){
+    var createMessage = '{"action":"wheelCreation","id":12,"color":"green"}';
+    sendMessage(allWebsockets[11], createMessage);
+  }
+  var conv2motorposition = 0;
+  function conv2Add20(){
+    conv2motorposition += 20;
+    var convMessage = '{"action":"motorPosition","id":2,"movement":' + conv2motorposition + '}';
+    sendMessage(allWebsockets[3], convMessage);
+  }
+  var conv3motorposition = 0;
+  function conv3Add20(){
+    conv3motorposition += 20;
+    var convMessage = '{"action":"motorPosition","id":3,"movement":' + conv3motorposition + '}';
+    sendMessage(allWebsockets[4], convMessage);
+  }
+  var conv4motorposition = 0;
+  function conv4Add20(){
+    conv4motorposition += 20;
+    var convMessage = '{"action":"motorPosition","id":4,"movement":' + conv4motorposition + '}';
+    sendMessage(allWebsockets[5], convMessage);
+  }
+  function greenWheelAtSlide(){
+    var sensorMessage = '{"action":"wheelAtSlide","id":13,"color":"green"}';
+    sendMessage(allWebsockets[2], sensorMessage);
+  }
+  function slideFinished() {
+    var slideMessage = '{"action":"finished","id":8,"to":9}';
+    sendMessage(allWebsockets[9], slideMessage);
+  }
+  function slideReady() {
+    var slideMessage = '{ "action":"ready","id":8}';
+    sendMessage(allWebsockets[9], slideMessage);
+  }
+  function blueWheelAtSlide() {
+    var sensorMessage = '{"action":"wheelAtSlide","id":13,"color":"blue"}';
+    sendMessage(allWebsockets[2], sensorMessage);
+  }
+  </script>
+
+
+    <script src="resources/js/vendor/jquery.js"></script>
+    <script src="resources/js/vendor/what-input.js"></script>
+    <script src="resources/js/vendor/foundation.min.js"></script>
+
+</html>
