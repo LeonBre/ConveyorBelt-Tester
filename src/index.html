@@ -18,6 +18,7 @@
     </div>
 
     <div class="centerContainer">
+      <button class="button" onclick="connectGUI()">Connect GUI</button></br>
       <button class="button" onclick="connectAllWebsockets()">Connect all Websockets</button></br>
       <button class="button" onclick="resetValues()">Reset all values</button></br>
       <button class="button" onclick="createNewWheel()">Create a new Wheel</button></br>
@@ -32,12 +33,15 @@
   </body>
 
   <script>
-  var url = "ws://localhost:8080/ConveyorBeltOstfalia/echo"
-
+  var url2 = "ws://localhost:8080/ConveyorBeltOstfalia/echo"
+  var url = "ws://192.168.0.79:8080/ConveyorBeltOstfalia/echo"
   var allWebsockets = new Array();
-  for(var i = 0; i <= 12; i++) {
+  for(var i = 1; i <= 13; i++) {
     var ws;
     allWebsockets[i] = ws;
+  }
+  function connectGUI() {
+    connect(1);
   }
 
   function connectAllWebsockets(){
@@ -46,14 +50,14 @@
     }
   }
   function connect(provideId) {
-    console.log("Connect ID:" + provideId + 1);
+    console.log("Connect ID:" + provideId);
     allWebsockets[provideId] = new WebSocket(url);
     allWebsockets[provideId].onmessage = function(event) {
-      console.log("ID : " + (provideId + 1) + " :Data ::" + event.data);
+      console.log("ID : " + provideId + " :Data ::" + event.data);
       var jsonObject = JSON.parse(event.data);
       if (jsonObject.action === "requestId") {
         // Send Callback for providing Ids.
-        sendMessage(allWebsockets[provideId],'{"action": "provideId", "id":' + (provideId + 1) + ',"title": "HTML Application"}');
+        sendMessage(allWebsockets[provideId],'{"action": "provideId", "id":' + provideId + ',"title": "HTML Application"}');
       } else if (jsonObject.action === "wheelStoreUpdate") {
          // Implement Logic.
       } else if (jsonObject.action === "wheelUpdate") {
@@ -100,20 +104,20 @@ function waitForSocketConnection(socket, callback){
   function convXAdd20(conv) {
     conveyorMotorPosition[conv] += 20;
     var convMessage = '{"action":"motorPosition","id":' + conv + ',"movement":' + conveyorMotorPosition[conv] + '}';
-    sendMessage(allWebsockets[conv - 1], convMessage);
+    sendMessage(allWebsockets[conv], convMessage);
   }
 
   function wheelAtSlide(color){
     var sensorMessage = '{"action":"wheelAtSlide","id":13,"color":"' + color + '"}';
-    sendMessage(allWebsockets[7], sensorMessage);
+    sendMessage(allWebsockets[8], sensorMessage);
   }
   function slideFinished() {
     var slideMessage = '{"action":"finished","id":8,"to":9}';
-    sendMessage(allWebsockets[9], slideMessage);
+    sendMessage(allWebsockets[10], slideMessage);
   }
   function slideReady() {
     var slideMessage = '{ "action":"ready","id":8}';
-    sendMessage(allWebsockets[9], slideMessage);
+    sendMessage(allWebsockets[10], slideMessage);
   }
   </script>
 
