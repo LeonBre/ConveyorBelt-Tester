@@ -18,23 +18,29 @@
     </div>
 
     <div class="centerContainer">
-      <button class="button" onclick="connectGUI()">Connect GUI</button></br>
       <button class="button" onclick="connectAllWebsockets()">Connect all Websockets</button></br>
+      <button class="button" onclick="runOrder()">Run order</button></br>
       <button class="button" onclick="resetValues()">Reset all values</button></br>
       <button class="button" onclick="createNewWheel()">Create a new Wheel</button></br>
       <button class="button" onclick="convXAdd20(2)">Add 20 to Conv2</button></br>
       <button class="button" onclick="convXAdd20(3)">Add 20 to Conv3</button></br>
       <button class="button" onclick="convXAdd20(4)">Add 20 to Conv4</button></br>
+      <button class="button" onclick="convXAdd20(5)">Add 20 to Conv5</button></br>
+      <button class="button" onclick="convXAdd20(6)">Add 20 to Conv6</button></br>
+      <button class="button" onclick="convXAdd20(7)">Add 20 to Conv7</button></br>
       <button class="button" onclick="wheelAtSlide('green')">Green Wheel at Slide</button>
       <button class="button" onclick="wheelAtSlide('blue')">Blue Wheel at Slide</button></br>
-      <button class="button" onclick="slideFinished()">Slide finished</button></br>
+      <button class="button" onclick="slideFinished(9)">Slide finished to 9</button></br>
+      <button class="button" onclick="slideFinished(10)">Slide finished to 10</button></br>
+      <button class="button" onclick="slideFinished(11)">Slide finished to 11</button></br>
       <button class="button" onclick="slideReady()">Slide ready</button></br>
+      <button class="button" onclick="connectGUI()">Connect GUI</button></br>
     </div>
   </body>
 
   <script>
-  var url2 = "ws://localhost:8080/ConveyorBeltOstfalia/echo"
-  var url = "ws://192.168.0.79:8080/ConveyorBeltOstfalia/echo"
+  var url = "ws://localhost:8080/ConveyorBeltOstfalia/echo"
+  var url2 = "ws://192.168.0.79:8080/ConveyorBeltOstfalia/echo"
   var allWebsockets = new Array();
   for(var i = 1; i <= 13; i++) {
     var ws;
@@ -111,14 +117,27 @@ function waitForSocketConnection(socket, callback){
     var sensorMessage = '{"action":"wheelAtSlide","id":13,"color":"' + color + '"}';
     sendMessage(allWebsockets[8], sensorMessage);
   }
-  function slideFinished() {
-    var slideMessage = '{"action":"finished","id":8,"to":9}';
+  function slideFinished(slide) {
+    var slideMessage = '{"action":"finished","id":8,"to":' + slide + '}';
     sendMessage(allWebsockets[10], slideMessage);
   }
   function slideReady() {
     var slideMessage = '{ "action":"ready","id":8}';
     sendMessage(allWebsockets[10], slideMessage);
   }
+  function runOrder() {
+    runWheelOrder('blue', 9);
+    runWheelOrder('blue' , 9);
+    runWheelOrder('green' , 10);
+    runWheelOrder('green' , 10);
+  }
+
+  function runWheelOrder(color, slide) {
+    wheelAtSlide(color)
+    slideFinished(slide);
+    slideReady();
+  }
+
   </script>
 
 
