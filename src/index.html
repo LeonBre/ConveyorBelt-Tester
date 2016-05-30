@@ -33,14 +33,16 @@
       <button class="button" onclick="slideFinished(9)">Slide finished to 9</button></br>
       <button class="button" onclick="slideFinished(10)">Slide finished to 10</button></br>
       <button class="button" onclick="slideFinished(11)">Slide finished to 11</button></br>
+      <button class="button" onclick="slideFinished(5)">Slide finished to 5</button></br>
       <button class="button" onclick="slideReady()">Slide ready</button></br>
       <button class="button" onclick="connectGUI()">Connect GUI</button></br>
     </div>
   </body>
 
   <script>
-  var url = "ws://localhost:8080/ConveyorBeltOstfalia/echo"
+  var url3 = "ws://localhost:8080/ConveyorBeltOstfalia/echo"
   var url2 = "ws://192.168.0.79:8080/ConveyorBeltOstfalia/echo"
+  var url = "ws://192.168.98.102:8080/ConveyorBeltOstfalia/echo"
   var allWebsockets = new Array();
   for(var i = 1; i <= 13; i++) {
     var ws;
@@ -130,14 +132,21 @@ function waitForSocketConnection(socket, callback){
     runWheelOrder('blue' , 9);
     runWheelOrder('green' , 10);
     runWheelOrder('green' , 10);
+    runWheelOrder('green' , 11);
   }
 
   function runWheelOrder(color, slide) {
     wheelAtSlide(color)
     slideFinished(slide);
     slideReady();
+    sleepFor(200);
   }
 
+  //Internet
+  function sleepFor( sleepDuration ){
+    var now = new Date().getTime();
+    while(new Date().getTime() < now + sleepDuration){ /* do nothing */ }
+  }
   </script>
 
 
