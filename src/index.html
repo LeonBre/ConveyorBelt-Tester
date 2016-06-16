@@ -35,14 +35,15 @@
       <button class="button" onclick="slideFinished(11)">Slide finished to 11</button></br>
       <button class="button" onclick="slideFinished(5)">Slide finished to 5</button></br>
       <button class="button" onclick="slideReady()">Slide ready</button></br>
+      <button class="button" onclick="removeWheelsFromWheelstore(9)">Delete Wheels -> 9</button>
       <button class="button" onclick="connectGUI()">Connect GUI</button></br>
     </div>
   </body>
 
   <script>
-  var url3 = "ws://localhost:8080/ConveyorBeltOstfalia/echo"
-  var url2 = "ws://192.168.0.79:8080/ConveyorBeltOstfalia/echo"
-  var url = "ws://192.168.98.102:8080/ConveyorBeltOstfalia/echo"
+  var url2 = "ws://localhost:8080/ConveyorBeltOstfalia/echo"
+  var url = "ws://192.168.0.79:8080/ConveyorBeltOstfalia/echo"
+  var url3 = "ws://192.168.98.102:8080/ConveyorBeltOstfalia/echo"
   var allWebsockets = new Array();
   for(var i = 1; i <= 13; i++) {
     var ws;
@@ -61,7 +62,8 @@
     console.log("Connect ID:" + provideId);
     allWebsockets[provideId] = new WebSocket(url);
     allWebsockets[provideId].onmessage = function(event) {
-      console.log("ID : " + provideId + " :Data ::" + event.data);
+
+      console.log("Id: " + provideId + " :Data :" +  JSON.stringify(JSON.parse(event.data),null,2));
       var jsonObject = JSON.parse(event.data);
       if (jsonObject.action === "requestId") {
         // Send Callback for providing Ids.
@@ -127,6 +129,12 @@ function waitForSocketConnection(socket, callback){
     var slideMessage = '{ "action":"ready","id":8}';
     sendMessage(allWebsockets[10], slideMessage);
   }
+
+  function removeWheelsFromWheelstore(wheelStore) {
+    var wheelStoreMessage = '{"action":"deleteWheel","id":' + wheelStore + '}';
+    sendMessage(allWebsockets[1], wheelStoreMessage);
+  }
+
   function runOrder() {
     runWheelOrder('blue', 9);
     runWheelOrder('blue' , 9);
